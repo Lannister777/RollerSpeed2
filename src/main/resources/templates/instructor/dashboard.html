@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Instructor - Roller Speed</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/rollerspeed.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark rs-navbar mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Roller Speed</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" th:href="@{/instructor}">Panel Instructor</a></li>
+            </ul>
+            <a class="btn btn-outline-light" th:href="@{/logout}">Salir</a>
+        </div>
+    </div>
+</nav>
+<div class="container mb-5">
+    <div class="p-4 mb-4 text-white rounded rs-banner" style="background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://www.santamarta.gov.co/sites/default/files/el_patinodromo_de_la_alegria_recibe_el_nacional_interclubes_de_patinaje_este_fin_de_semana.jpg') center/cover no-repeat;">
+        <h2 class="mb-1">Panel de Instructor</h2>
+        <p class="mb-0" th:if="${instructor != null}" th:text="'Bienvenido, ' + ${instructor.nombreCompleto}">Consulta tus clases asignadas y registra la asistencia de tus grupos.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="rs-panel bg-white p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Mis clases</h5>
+                </div>
+                <div th:if="${clases != null and !#lists.isEmpty(clases)}" class="table-responsive-sm">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Día</th>
+                                <th>Horario</th>
+                                <th>Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${clases}">
+                                <td th:text="${c.nombre}"></td>
+                                <td th:text="${c.diaSemana}"></td>
+                                <td>
+                                    <span th:text="${c.horaInicio}"></span>
+                                    <span> - </span>
+                                    <span th:text="${c.horaFin}"></span>
+                                </td>
+                                <td th:text="${c.nivel}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${clases == null or #lists.isEmpty(clases)}" class="alert alert-info mb-0">
+                    Aún no tienes clases asignadas.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="rs-panel bg-white p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0">Asistencias recientes</h5>
+                </div>
+                <div th:if="${asistenciasRecientes != null and !#lists.isEmpty(asistenciasRecientes)}" class="table-responsive-sm">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Clase</th>
+                                <th>Alumno</th>
+                                <th>Presente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="a : ${asistenciasRecientes}">
+                                <td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${a.clase != null ? a.clase.nombre : ''}"></td>
+                                <td th:text="${a.alumno != null ? a.alumno.nombreCompleto : ''}"></td>
+                                <td>
+                                    <span th:if="${a.presente}" class="badge bg-success">Presente</span>
+                                    <span th:if="${!a.presente}" class="badge bg-danger">Ausente</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${asistenciasRecientes == null or #lists.isEmpty(asistenciasRecientes)}" class="alert alert-info mb-0">
+                    Aún no hay asistencias registradas en tus clases.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
